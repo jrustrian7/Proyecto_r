@@ -1,0 +1,45 @@
+---
+title: "Proyecto Final - Julio Cesar Rustrian Monterroso"
+output: html_notebook
+---
+
+#Paso 1 - Conociendo los datos
+```{r}
+library(dplyr)
+
+yearly = read.csv(file = "deaths_handwashing.csv", header = TRUE, sep = ",")
+yearly
+```
+
+#paso 2 - alarmante número de muertes
+```{r}
+yearly = yearly %>%
+  mutate(proportion_deaths = deaths/births)
+
+yearly
+```
+
+#paso 3 - muerte en las clinicas
+```{r}
+library(ggplot2)
+
+ggplot(yearly, aes(x=proportion_deaths, y=year, color = clinic)) +
+  geom_line()
+```
+
+#paso 4 - comienza el lavado de manos
+```{r}
+monthly = read.csv(file = "deaths_clinic_1.csv", header = TRUE, sep = ",")
+monthly = monthly %>%
+  mutate(proportion_deaths = deaths/births)
+
+head(monthly)
+```
+
+
+#paso 5 - El efecto del lavado de manos
+```{r}
+ggplot(head(monthly), aes(x=proportion_deaths,y=date)) +
+  geom_line()
+
+```
