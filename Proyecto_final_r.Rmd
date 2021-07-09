@@ -5,9 +5,10 @@ output: html_notebook
 
 #Paso 1 - Conociendo los datos
 ```{r}
-library(dplyr)
+library(tidyverse)
+library(ggplot2)
 
-yearly = read.csv(file = "deaths_handwashing.csv", header = TRUE, sep = ",")
+yearly = read_csv(file = "deaths_handwashing.csv")
 yearly
 ```
 
@@ -21,7 +22,7 @@ yearly
 
 #paso 3 - muerte en las clinicas
 ```{r}
-library(ggplot2)
+#library(ggplot2)
 
 ggplot(yearly, aes(x=proportion_deaths, y=year, color = clinic)) +
   geom_line()
@@ -29,17 +30,23 @@ ggplot(yearly, aes(x=proportion_deaths, y=year, color = clinic)) +
 
 #paso 4 - comienza el lavado de manos
 ```{r}
-monthly = read.csv(file = "deaths_clinic_1.csv", header = TRUE, sep = ",")
+monthly = read_csv(file = "deaths_clinic_1.csv")
 monthly = monthly %>%
   mutate(proportion_deaths = deaths/births)
 
 head(monthly)
 ```
 
-
 #paso 5 - El efecto del lavado de manos
 ```{r}
-ggplot(head(monthly), aes(x=proportion_deaths,y=date)) +
-  geom_line()
 
+ggplot(monthly, aes(x = date, y = proportion_deaths)) + 
+  geom_line(colour="red") +
+  labs(
+    x= "[ Fecha ]",
+    y = "[ Proporción de Muertes ]",
+    title = "Proporción de muertes por fecha",
+    caption = "<Efecto de lavado de mano>"
+  )
 ```
+
