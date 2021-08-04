@@ -5,44 +5,41 @@ output: html_notebook
 
 #Paso 1 - Conociendo los datos
 ```{r}
-library(tidyverse)
-library(ggplot2)
+library(tidyverse) #cargando libreria
+library(ggplot2) #cargando libreria
 
-yearly = read_csv(file = "deaths_handwashing.csv")
+yearly = read_csv(file = "deaths_handwashing.csv") #cargando archivo csv y creando nuevo dataset
 yearly
 ```
 
 #paso 2 - alarmante número de muertes
 ```{r}
-yearly = yearly %>%
-  mutate(proportion_deaths = deaths/births)
+yearly <- yearly %>%
+  mutate(proportion_deaths = deaths/births) #creando la nueva columna proportion_deaths
 
-yearly
+yearly #imprimiendo yearly
 ```
 
 #paso 3 - muerte en las clinicas
 ```{r}
-#library(ggplot2)
-
-ggplot(yearly, aes(x=proportion_deaths, y=year, color = clinic)) +
-  geom_line()
+ggplot(yearly, aes(x=proportion_deaths, y=year, color = clinic)) + #indicando las caracteristicas de la gráfica
+  geom_line() #indicando el tipo de gráfico
 ```
 
 #paso 4 - comienza el lavado de manos
 ```{r}
-monthly = read_csv(file = "deaths_clinic_1.csv")
-monthly = monthly %>%
-  mutate(proportion_deaths = deaths/births)
+monthly = read_csv(file = "deaths_clinic_1.csv") #cargando archivo csv y creando un nuevo dataset
+monthly <- monthly %>%
+  mutate(proportion_deaths = deaths/births) #creando la nueva columna proportion_deaths
 
-head(monthly)
+head(monthly) #imprimiendo monthly
 ```
 
 #paso 5 - El efecto del lavado de manos
 ```{r}
-
-ggplot(monthly, aes(x = date, y = proportion_deaths, color = births)) + 
-  geom_line() +
-  labs(
+ggplot(monthly, aes(x = date, y = proportion_deaths, color = births)) + #indicando las caracteristicas de la gráfica
+  geom_line() + #indicando el tipo de gráfico
+  labs( #a partir de esta linea se dara formato a las etiquetas del gráfico
     x= "[ Fecha ]",
     y = "[ Proporción de Muertes ]",
     title = "Proporción de muertes por fecha",
@@ -53,17 +50,16 @@ ggplot(monthly, aes(x = date, y = proportion_deaths, color = births)) +
 #paso 6 - Los resultados del lavado de manos
 #paso 6.1 - Agregue una columna TRUE/FALSE a monthly llamado handwashing_started, que será TRUE a partir del año en que se impuso el lavado de manos.
 ```{r}
-
 monthly <- monthly %>%
-  mutate(handwashing_started = ifelse(monthly$date >= "1847-01-01",TRUE, FALSE))
+  mutate(handwashing_started = ifelse(monthly$date >= "1847-01-01",TRUE, FALSE)) #asignando la condición para TRUE/FALSE
 
 monthly
 ```
 #paso 6.2 y 6.3 - Haga una gráfica lineal de proportion_deaths por fecha para el data frame monthly usando ggplot. Haga que el color de la línea dependa de handwashing_started
 ```{r}
-ggplot(monthly, aes(x = date, y = proportion_deaths, color = handwashing_started)) + 
-  geom_line() +
-  labs(
+ggplot(monthly, aes(x = date, y = proportion_deaths, color = handwashing_started)) + #indicando las caracteristicas de la gráfica
+  geom_line() + #indicando el tipo de gráfico
+  labs( #a partir de esta linea se dara formato a las etiquetas del gráfico
     x= "[ Fecha ]",
     y = "[ Proporción de Muertes ]",
     title = "Proporción de muertes por fecha",
@@ -73,10 +69,11 @@ ggplot(monthly, aes(x = date, y = proportion_deaths, color = handwashing_started
 
 #paso 7 - ¿Más lavado de manos, menos muertes?
 ```{r}
-month_summary <- monthly %>%
-  group_by(handwashing_started) %>%
-  summarize(median(proportion_deaths))
-
-month_summary
+month_summary <- monthly %>% #asignando resultado en variable month_summary
+  group_by(handwashing_started) %>% #agrupando datos en función del inicio del lavado de manos
+  summarize(mean_proportion_deaths = mean(proportion_deaths)) %>% #calculando la media de proporción de muertes
+  arrange(mean_proportion_deaths) #ordenando de forma ascendente la media proporcional de muertes
+  
+month_summary #mostrando resultado de month_summary
 ```
 
